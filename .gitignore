@@ -1,0 +1,53 @@
+# Maven
+/target/
+!.mvn/wrapper/maven-wrapper.jar
+.mvn/timing.properties
+pom.xml.tag
+pom.xml.releaseBackup
+pom.xml.versionsBackup
+pom.xml.next
+release.properties
+
+# Eclipse
+.project
+.classpath
+.settings/
+.loadpath
+
+# IDEs
+*.iml
+*.ipr
+*.iws
+.idea/
+
+# OS 별 임시 파일
+.DS_Store
+Thumbs.db
+
+# 로그 파일
+*.log
+
+# 빌드 도구
+build/
+dist/
+
+# 서버 관련 (예: 톰캣, JBoss 등)
+*.war
+*.ear
+*.tmp
+
+# 테스트 리포트
+surefire-reports/
+test-output/
+
+# 환경 설정 또는 비밀 키
+*.env
+.env
+*.key
+*.pem
+*.crt
+
+# 기타
+*.swp
+*.bak
+*.orig

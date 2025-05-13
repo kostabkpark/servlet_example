@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+	<form action="/calcControl" method="post"> 
+	<!-- 데이터를 입력받아서 서버로 전달(1. 쿼리 스트링, 2. body 에 담아서 전달)하기 위한 태그 -->
+		<input type="text" name="n1">
+		<select name="op">
+			<option value="+">더하기</option>
+			<option value="-">빼기</option>
+			<option value="*">곱하기</option>
+			<option value="/">나누기</option>
+		</select>
+		<input type="text" name="n2">
+		<input type="submit" value="계산">
+	</form>
+</body>
+</html>
