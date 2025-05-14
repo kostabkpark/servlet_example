@@ -34,8 +34,10 @@ public class LoginServlet extends HttpServlet {
 		User user = service.findById(id);
 		if(user.getPwd().equals(pwd)) {
 			HttpSession session = req.getSession();
+			session.setAttribute("session_id", session.getId());
 			session.setAttribute("id", id);
-			resp.sendRedirect("/ch07/loginOK.jsp");
+			session.setAttribute("pwd", pwd);
+			resp.sendRedirect("/userinfo");
 		} else {
 			// 데이터베이스에서 id 들고와서 pwd 일치하지 않으면 ==> 로그인 실패
 			resp.sendRedirect("/ch07/login.jsp");
@@ -45,9 +47,8 @@ public class LoginServlet extends HttpServlet {
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		// TODO Auto-generated method stub
-		super.doGet(req, resp);
+		HttpSession session = req.getSession();
+		req.setAttribute("id", session.getAttribute("id"));
+		req.getRequestDispatcher("/ch07/loginOK.jsp").forward(req, resp);
 	}
-
-
-
 }

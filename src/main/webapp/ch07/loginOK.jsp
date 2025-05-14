@@ -8,5 +8,7 @@
 </head>
 <body> 
 	${id} 님 반갑습니다.
+	사용자정보
+	${pwd}
 </body>
 </html>
