@@ -2,6 +2,7 @@ package ch07;
 
 import java.io.IOException;
 
+import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -15,19 +16,38 @@ import javax.servlet.http.HttpSession;
 @WebServlet("/login")
 public class LoginServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-
+	UserService service;
 	/**
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
-	
+	@Override
+	public void init(ServletConfig config) throws ServletException {
+		// TODO Auto-generated method stub
+		super.init(config);
+		service = new UserService();
+	}
 	
 	protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		String id = req.getParameter("id");
-		System.out.println(id);
-		System.out.println(req.getParameter("pwd"));
-		HttpSession session = req.getSession();
-		session.setAttribute("id", id);
-		resp.sendRedirect("/ch07/loginOK.jsp");
+		String pwd = req.getParameter("pwd");
+		// 데이터베이스에서 id 들고와서 pwd 일치하는지 확인 ==> 로그인 성공
+		User user = service.findById(id);
+		if(user.getPwd().equals(pwd)) {
+			HttpSession session = req.getSession();
+			session.setAttribute("id", id);
+			resp.sendRedirect("/ch07/loginOK.jsp");
+		} else {
+			// 데이터베이스에서 id 들고와서 pwd 일치하지 않으면 ==> 로그인 실패
+			resp.sendRedirect("/ch07/login.jsp");
+		}
 	}
+
+	@Override
+	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		// TODO Auto-generated method stub
+		super.doGet(req, resp);
+	}
+
+
 
 }
