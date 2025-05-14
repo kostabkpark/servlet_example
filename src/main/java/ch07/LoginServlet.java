@@ -5,6 +5,7 @@ import java.io.IOException;
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -34,9 +35,12 @@ public class LoginServlet extends HttpServlet {
 		User user = service.findById(id);
 		if(user.getPwd().equals(pwd)) {
 			HttpSession session = req.getSession();
-			session.setAttribute("session_id", session.getId());
+			String session_id = session.getId();
+			session.setAttribute("session_id", session_id);
 			session.setAttribute("id", id);
 			session.setAttribute("pwd", pwd);
+			Cookie cookie = new Cookie("session_id", session_id);
+			resp.addCookie(cookie);
 			resp.sendRedirect("/userinfo");
 		} else {
 			// 데이터베이스에서 id 들고와서 pwd 일치하지 않으면 ==> 로그인 실패
