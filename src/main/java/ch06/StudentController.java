@@ -36,5 +36,4 @@ public class StudentController extends HttpServlet {
 	private String insert(HttpServletRequest req, HttpServletResponse resp) {
 		return "studentInfo.jsp";
 	}
-	
 }
