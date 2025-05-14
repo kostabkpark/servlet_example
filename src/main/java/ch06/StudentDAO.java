@@ -32,8 +32,22 @@ public class StudentDAO {
 		}	
 	}
 	
-	public void insert() {
-		
+	public void insert(Student s) {
+		open();
+		String sql = "insert into student(username, univ, birth, email) values (?,?,?,?)";
+		try {
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, s.getUsername());
+			pstmt.setString(2, s.getUniv());
+			pstmt.setDate(3, s.getBirth());
+			pstmt.setString(4, s.getEmail());
+			
+			pstmt.executeUpdate();
+		} catch(Exception e) {
+			e.printStackTrace();
+		} finally {
+			close();
+		}
 	}
 	
 	public List<Student> findAll(){
