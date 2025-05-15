@@ -62,16 +62,21 @@ public class NewsDAO {
 	}
 	
 	public News getNews(int aid) throws Exception {
+		// 1) Connection 을 얻어온다.
 		Connection conn = open();
+		// 2) sql 을 작성한다.
 		String sql = "select aid, title, img, date_format(date, '%Y-%m-%d %h:%m:%s') as cdate, content from news"
 				+ " where aid=?";
+		// 3) pstmt 에 sql 을 적용한다. 매개변수가 있다면 argument를 설정한다.
 		PreparedStatement pstmt = conn.prepareStatement(sql);
 		pstmt.setInt(1, aid);
 		
 		News n = new News();
+		// 4) pstmt sql 문을 실행한다. ==> rs 에 담는다.
 		ResultSet rs = pstmt.executeQuery();
 		
 		try(conn; pstmt; rs) {
+		// 5) 가져온 데이터를 처리한다.
 			if(rs.next()) {
 				n.setAid(rs.getInt("aid"));
 				n.setTitle(rs.getString("title"));
@@ -79,7 +84,9 @@ public class NewsDAO {
 				n.setDate(rs.getString("cdate"));
 				n.setContent(rs.getString("content"));
 			};
+		// 6) 리소스를 닫는다. try with resources 에 의해 자동으로 닫힘
 		}
+		// 7) 데이터베이스로부터 가져온 데이터를 반환한다.
 		return n;
 	}
 
