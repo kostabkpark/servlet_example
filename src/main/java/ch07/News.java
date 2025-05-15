@@ -41,6 +41,4 @@ public class News {
 	public String toString() {
 		return "News [aid=" + aid + ", title=" + title + ", date=" + date + "]";
 	}
-
-	
 }
