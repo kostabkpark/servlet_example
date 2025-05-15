@@ -14,11 +14,13 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.Part;
 
+import org.apache.commons.beanutils.BeanUtils;
+
 /**
  * Servlet implementation class NewsController
  */
 @WebServlet("/news")
-@MultipartConfig(maxFileSize = 1024*1024*2, location = "/img")
+@MultipartConfig(maxFileSize = 1024*1024*2) //location = "c:/temp/img")
 public class NewsController extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	private NewsDAO newsDAO;
@@ -46,21 +48,9 @@ public class NewsController extends HttpServlet {
 		if(action == null) {
 			resp.sendRedirect("/news?action=list");
 		} else {
-			switch(action) {
-			case "list" : 
-				try {
-					view = list(req, resp);
-				} catch (Exception e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				} break;
-			case "view" : 
-				try {
-					view = view(req, resp);
-				} catch (Exception e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				} break;
+			switch(action) {// try-catch 정리
+			case "list" : view = list(req, resp); break;
+			case "view" : view = view(req, resp); break;
 			case "addNews" : view = addNews(req, resp); break;
 			case "delNews" : view = delNews(req, resp); break;
 			}
@@ -68,22 +58,45 @@ public class NewsController extends HttpServlet {
 		}
 	}
 	
-	private String list(HttpServletRequest req, HttpServletResponse resp) throws Exception {
-		List<News> news = newsDAO.getAll();
-		req.setAttribute("newsList", news);
+	private String list(HttpServletRequest req, HttpServletResponse resp)  {
+		try {
+			List<News> news = newsDAO.getAll();
+			req.setAttribute("newsList", news);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 		return "newsList.jsp";
 	}
-	private String view(HttpServletRequest req, HttpServletResponse resp) throws Exception {
+	private String view(HttpServletRequest req, HttpServletResponse resp) {
 		int aid = Integer.parseInt(req.getParameter("aid"));
-		News news = newsDAO.getNews(aid);
-		req.setAttribute("news", news);
+		try {
+			News news = newsDAO.getNews(aid);
+			req.setAttribute("news", news);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 		return "newsView.jsp";
 	}
 	
 	private String addNews(HttpServletRequest req, HttpServletResponse resp)  {
 		News n = new News();
-		Part part = req.getPart("img");
-		return "newsList.jsp";
+		try {
+			Part part = req.getPart("img");
+			String filename = part.getName();
+			System.out.println(filename);
+			if(filename != null && !filename.isEmpty()) {
+				part.write(filename);
+			}
+			BeanUtils.populate(n, req.getParameterMap());
+			
+			n.setImg("/img/"+ filename);
+			
+			newsDAO.addNews(n);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return list(req,resp);
+		}
+		return "redirect:/news?action=list";
 	}
 	
 	private String delNews(HttpServletRequest req, HttpServletResponse resp)  {

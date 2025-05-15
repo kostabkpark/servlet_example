@@ -11,9 +11,9 @@
 	<hr>
 	<form action="/news?action=addNews" method="post" enctype="multipart/form-data">
 		<label>뉴스 제목</label>
-		<input type="text" name="title">
+		<input type="text" name="title"><br>
 		<label>뉴스 내용</label>
-		<textarea rows="5" cols="20" name="content"></textarea>
+		<textarea rows="5" cols="20" name="content"></textarea><br>
 		<input type="file" name="img" accept="image/*">
 		<input type="submit" value="전송">
 	</form>
