@@ -41,7 +41,7 @@ public class NewsDAO {
 		Connection conn = open();
 		List<News> newsList = new ArrayList<>();
 		
-		String sql = "select aid, title, date_format(date, '%Y-%m-%d %h:%m:%s') as cdate from news";
+		String sql = "select aid, title, date_format(date, '%Y-%m-%d %H:%i:%s') as cdate from news";
 		
 		PreparedStatement pstmt = conn.prepareStatement(sql);
 		ResultSet rs = pstmt.executeQuery();
@@ -65,7 +65,7 @@ public class NewsDAO {
 		// 1) Connection 을 얻어온다.
 		Connection conn = open();
 		// 2) sql 을 작성한다.
-		String sql = "select aid, title, img, date_format(date, '%Y-%m-%d %h:%m:%s') as cdate, content from news"
+		String sql = "select aid, title, img, date_format(date, '%Y-%m-%d %H:%i:%s') as cdate, content from news"
 				+ " where aid=?";
 		// 3) pstmt 에 sql 을 적용한다. 매개변수가 있다면 argument를 설정한다.
 		PreparedStatement pstmt = conn.prepareStatement(sql);
