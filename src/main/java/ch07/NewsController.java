@@ -36,41 +36,41 @@ public class NewsController extends HttpServlet {
 	protected void service(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		String method = req.getMethod();
 		String action = req.getParameter("action");
+		String path = "/ch07/";
+		String view = "";
 		
-		System.out.println(method);
-		System.out.println(action);
 		if(action == null) {
 			resp.sendRedirect("/news?action=list");
 		} else {
 			switch(action) {
 			case "list" : 
 				try {
-					list(req, resp);
+					view = list(req, resp);
 				} catch (Exception e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				} break;
 			case "view" : 
 				try {
-					view(req, resp);
+					view = view(req, resp);
 				} catch (Exception e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				} break;
 			}
+			context.getRequestDispatcher(path + view).forward(req, resp);
 		}
 	}
 	
-	private void list(HttpServletRequest req, HttpServletResponse resp) throws Exception {
-		System.out.println("list 처리중입니다.");
+	private String list(HttpServletRequest req, HttpServletResponse resp) throws Exception {
 		List<News> news = newsDAO.getAll();
 		req.setAttribute("newsList", news);
-		System.out.println(news);
+		return "newsList.jsp";
 	}
-	private void view(HttpServletRequest req, HttpServletResponse resp) throws Exception {
-		System.out.println("view 처리중입니다.");
-		News news = newsDAO.getNews(1);
+	private String view(HttpServletRequest req, HttpServletResponse resp) throws Exception {
+		int aid = Integer.parseInt(req.getParameter("aid"));
+		News news = newsDAO.getNews(aid);
 		req.setAttribute("news", news);
-		System.out.println(news.toString());
+		return "newsView.jsp";
 	}
 }
