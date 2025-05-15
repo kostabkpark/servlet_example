@@ -15,7 +15,7 @@
 		<label>뉴스 내용</label>
 		<textarea rows="5" cols="20" name="content"></textarea><br>
 		<input type="file" name="img" accept="image/*">
-		<input type="submit" value="전송">2
+		<input type="submit" value="전송">
 	</form>
 </body>
 </html>

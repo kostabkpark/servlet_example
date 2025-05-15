@@ -20,7 +20,7 @@ import org.apache.commons.beanutils.BeanUtils;
  * Servlet implementation class NewsController
  */
 @WebServlet("/news")
-@MultipartConfig(maxFileSize = 1024*1024*2, location = "/temp/img")
+@MultipartConfig(maxFileSize = 1024*1024*2, location = "c:/dev/upload")
 public class NewsController extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	private NewsDAO newsDAO;
@@ -54,10 +54,41 @@ public class NewsController extends HttpServlet {
 			case "addNews" : view = addNews(req, resp); break;
 			case "delNews" : view = delNews(req, resp); break;
 			}
-			context.getRequestDispatcher(path + view).forward(req, resp);
+			if(view.startsWith("redirect:")) {
+				String redirectUrl = view.substring("redirect:".length()); 
+				System.out.println(redirectUrl);
+				resp.sendRedirect(redirectUrl);
+			} else {
+				context.getRequestDispatcher(path + view).forward(req, resp);	
+			}
 		}
 	}
 	
+	private String addNews(HttpServletRequest req, HttpServletResponse resp)  {
+		System.out.println(req.getMethod());
+		if(req.getMethod().equals("POST")) {
+			News n = new News();
+			try {
+				Part part = req.getPart("img");
+				String filename = part.getSubmittedFileName();
+				System.out.println(filename);
+				if(filename != null && !filename.isEmpty()) {
+					part.write(filename);
+				}
+				BeanUtils.populate(n, req.getParameterMap());
+				
+				n.setImg("/img/"+ filename);
+				
+				newsDAO.addNews(n);
+			} catch (Exception e) {
+				e.printStackTrace();
+				return list(req,resp);
+			}
+			return "redirect:/news?action=list";
+		} else {
+			return null;
+		}
+	}
 	private String list(HttpServletRequest req, HttpServletResponse resp)  {
 		if(req.getMethod().equals("GET")) {
 			try {
@@ -86,30 +117,6 @@ public class NewsController extends HttpServlet {
 		}
 	}
 	
-	private String addNews(HttpServletRequest req, HttpServletResponse resp)  {
-		if(req.getMethod().equals("POST")) {
-			News n = new News();
-			try {
-				Part part = req.getPart("img");
-				String filename = part.getSubmittedFileName();
-				System.out.println(filename);
-				if(filename != null && !filename.isEmpty()) {
-					part.write(filename);
-				}
-				BeanUtils.populate(n, req.getParameterMap());
-				
-				n.setImg("/img/"+ filename);
-				
-				newsDAO.addNews(n);
-			} catch (Exception e) {
-				e.printStackTrace();
-				return list(req,resp);
-			}
-			return list(req,resp); 		//"redirect:/news?action=list";
-		} else {
-			return null;
-		}
-	}
 	
 	private String delNews(HttpServletRequest req, HttpServletResponse resp)  {
 		if(req.getMethod().equals("POST")) {
