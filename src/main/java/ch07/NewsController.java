@@ -96,7 +96,8 @@ public class NewsController extends HttpServlet {
 			e.printStackTrace();
 			return list(req,resp);
 		}
-		return "redirect:/news?action=list";
+		return list(req,resp);
+				//"redirect:/news?action=list";
 	}
 	
 	private String delNews(HttpServletRequest req, HttpServletResponse resp)  {
