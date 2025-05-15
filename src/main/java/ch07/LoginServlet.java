@@ -1,6 +1,9 @@
 package ch07;
 
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
@@ -26,6 +29,7 @@ public class LoginServlet extends HttpServlet {
 		// TODO Auto-generated method stub
 		super.init(config);
 		service = new UserService();
+		SessionManager sessionManager = new SessionManager();
 	}
 	
 	protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -35,11 +39,15 @@ public class LoginServlet extends HttpServlet {
 		User user = service.findById(id);
 		if(user.getPwd().equals(pwd)) {
 			HttpSession session = req.getSession();
-			String session_id = session.getId();
+			
+			String session_id = UUID.randomUUID().toString();
 			session.setAttribute("session_id", session_id);
 			session.setAttribute("id", id);
 			session.setAttribute("pwd", pwd);
+			//stores.put(session_id, id);
 			Cookie cookie = new Cookie("session_id", session_id);
+			cookie.setMaxAge(60*1);
+			cookie.setPath("/");
 			resp.addCookie(cookie);
 			resp.sendRedirect("/userinfo");
 		} else {
