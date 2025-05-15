@@ -37,5 +37,10 @@ public class News {
 	public void setContent(String content) {
 		this.content = content;
 	}
+	@Override
+	public String toString() {
+		return "News [aid=" + aid + ", title=" + title + ", date=" + date + "]";
+	}
 
+	
 }
